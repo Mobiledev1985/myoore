@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <color name="colorgray">#434343</color>
+    <color name="red">#ed1c24</color>
+    <color name="yellow">#fec72e</color>
+    <color name="white">#ffffff</color>
+    <color name="bg_common">#344049</color>
+    <color name="alert_background">#ffffff</color>
+    <color name="alert_text">#0f2438</color>
+    <color name="light_blue_50">#FFE1F5FE</color>
+    <color name="light_blue_200">#FF81D4FA</color>
+    <color name="light_blue_600">#FF039BE5</color>
+    <color name="light_blue_900">#FF01579B</color>
+    <color name="widget_black">#1D1D1D</color>
+    <color name="widget_background">#E6FFFFFF</color>
+
+</resources>

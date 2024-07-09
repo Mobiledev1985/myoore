@@ -1,0 +1,76 @@
+diff --git a/node_modules/react-native-local-auth/android/bin/build.gradle b/node_modules/react-native-local-auth/android/bin/build.gradle
+new file mode 100644
+index 0000000..b090aa7
+--- /dev/null
++++ b/node_modules/react-native-local-auth/android/bin/build.gradle
+@@ -0,0 +1,38 @@
++buildscript {
++    repositories {
++        jcenter()
++    }
++
++    dependencies {
++        classpath 'com.android.tools.build:gradle:1.3.1'
++    }
++}
++
++apply plugin: 'com.android.library'
++
++android {
++    compileSdkVersion 23
++    buildToolsVersion "23.0.1"
++
++    defaultConfig {
++        minSdkVersion 16
++        targetSdkVersion 23
++        versionCode 1
++        versionName "1.0"
++        ndk {
++            abiFilters "armeabi-v7a", "x86"
++        }
++    }
++    lintOptions {
++       warning 'InvalidPackage'
++    }
++}
++
++repositories {
++    mavenCentral()
++}
++
++dependencies {
++    implementation 'com.facebook.react:react-native:+'
++}
++
+diff --git a/node_modules/react-native-local-auth/android/bin/src/main/AndroidManifest.xml b/node_modules/react-native-local-auth/android/bin/src/main/AndroidManifest.xml
+new file mode 100644
+index 0000000..85464fa
+--- /dev/null
++++ b/node_modules/react-native-local-auth/android/bin/src/main/AndroidManifest.xml
+@@ -0,0 +1,6 @@
++
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++          package="io.tradle.reactlocalauth">
++
++</manifest>
++
+diff --git a/node_modules/react-native-local-auth/android/bin/src/main/java/io/tradle/reactlocalauth/LocalAuthModule.class b/node_modules/react-native-local-auth/android/bin/src/main/java/io/tradle/reactlocalauth/LocalAuthModule.class
+new file mode 100644
+index 0000000..fed46ae
+Binary files /dev/null and b/node_modules/react-native-local-auth/android/bin/src/main/java/io/tradle/reactlocalauth/LocalAuthModule.class differ
+diff --git a/node_modules/react-native-local-auth/android/bin/src/main/java/io/tradle/reactlocalauth/LocalAuthPackage.class b/node_modules/react-native-local-auth/android/bin/src/main/java/io/tradle/reactlocalauth/LocalAuthPackage.class
+new file mode 100644
+index 0000000..ad84a07
+Binary files /dev/null and b/node_modules/react-native-local-auth/android/bin/src/main/java/io/tradle/reactlocalauth/LocalAuthPackage.class differ
+diff --git a/node_modules/react-native-local-auth/android/build.gradle b/node_modules/react-native-local-auth/android/build.gradle
+index 0c9a9c2..b090aa7 100644
+--- a/node_modules/react-native-local-auth/android/build.gradle
++++ b/node_modules/react-native-local-auth/android/build.gradle
+@@ -33,6 +33,6 @@ repositories {
+ }
+ 
+ dependencies {
+-    compile 'com.facebook.react:react-native:+'
++    implementation 'com.facebook.react:react-native:+'
+ }
+ 

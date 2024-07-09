@@ -1,0 +1,165 @@
+diff --git a/node_modules/react-native-payments/android/.project b/node_modules/react-native-payments/android/.project
+new file mode 100644
+index 0000000..484b13c
+--- /dev/null
++++ b/node_modules/react-native-payments/android/.project
+@@ -0,0 +1,34 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<projectDescription>
++	<name>react-native-payments</name>
++	<comment>Project react-native-payments created by Buildship.</comment>
++	<projects>
++	</projects>
++	<buildSpec>
++		<buildCommand>
++			<name>org.eclipse.jdt.core.javabuilder</name>
++			<arguments>
++			</arguments>
++		</buildCommand>
++		<buildCommand>
++			<name>org.eclipse.buildship.core.gradleprojectbuilder</name>
++			<arguments>
++			</arguments>
++		</buildCommand>
++	</buildSpec>
++	<natures>
++		<nature>org.eclipse.jdt.core.javanature</nature>
++		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
++	</natures>
++	<filteredResources>
++		<filter>
++			<id>1712140299774</id>
++			<name></name>
++			<type>30</type>
++			<matcher>
++				<id>org.eclipse.core.resources.regexFilterMatcher</id>
++				<arguments>node_modules|\.git|__CREATED_BY_JAVA_LANGUAGE_SERVER__</arguments>
++			</matcher>
++		</filter>
++	</filteredResources>
++</projectDescription>
+diff --git a/node_modules/react-native-payments/android/bin/.project b/node_modules/react-native-payments/android/bin/.project
+new file mode 100644
+index 0000000..484b13c
+--- /dev/null
++++ b/node_modules/react-native-payments/android/bin/.project
+@@ -0,0 +1,34 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<projectDescription>
++	<name>react-native-payments</name>
++	<comment>Project react-native-payments created by Buildship.</comment>
++	<projects>
++	</projects>
++	<buildSpec>
++		<buildCommand>
++			<name>org.eclipse.jdt.core.javabuilder</name>
++			<arguments>
++			</arguments>
++		</buildCommand>
++		<buildCommand>
++			<name>org.eclipse.buildship.core.gradleprojectbuilder</name>
++			<arguments>
++			</arguments>
++		</buildCommand>
++	</buildSpec>
++	<natures>
++		<nature>org.eclipse.jdt.core.javanature</nature>
++		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
++	</natures>
++	<filteredResources>
++		<filter>
++			<id>1712140299774</id>
++			<name></name>
++			<type>30</type>
++			<matcher>
++				<id>org.eclipse.core.resources.regexFilterMatcher</id>
++				<arguments>node_modules|\.git|__CREATED_BY_JAVA_LANGUAGE_SERVER__</arguments>
++			</matcher>
++		</filter>
++	</filteredResources>
++</projectDescription>
+diff --git a/node_modules/react-native-payments/android/bin/build.gradle b/node_modules/react-native-payments/android/bin/build.gradle
+new file mode 100644
+index 0000000..0d066bd
+--- /dev/null
++++ b/node_modules/react-native-payments/android/bin/build.gradle
+@@ -0,0 +1,27 @@
++apply plugin: 'com.android.library'
++
++android {
++    compileSdkVersion 28
++    buildToolsVersion "28.0.3"
++
++    defaultConfig {
++        minSdkVersion 21
++        targetSdkVersion 28
++        versionCode 1
++        versionName "1.0"
++        ndk {
++            abiFilters "armeabi-v7a", "x86"
++        }
++    }
++    lintOptions {
++       warning 'InvalidPackage'
++    }
++}
++
++dependencies {
++    implementation 'com.facebook.react:react-native:+'
++    implementation 'com.google.android.gms:play-services-base:17.0.0'
++    implementation 'com.google.android.gms:play-services-identity:17.0.0'
++    implementation 'com.google.android.gms:play-services-wallet:17.0.0'
++    implementation 'com.android.support:support-v4:23.0.1'
++}
+diff --git a/node_modules/react-native-payments/android/bin/src/main/AndroidManifest.xml b/node_modules/react-native-payments/android/bin/src/main/AndroidManifest.xml
+new file mode 100644
+index 0000000..3bc7e98
+--- /dev/null
++++ b/node_modules/react-native-payments/android/bin/src/main/AndroidManifest.xml
+@@ -0,0 +1,5 @@
++
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++          package="com.reactnativepayments">
++
++</manifest>
+diff --git a/node_modules/react-native-payments/android/bin/src/main/java/com/reactnativepayments/ReactNativePaymentsModule.class b/node_modules/react-native-payments/android/bin/src/main/java/com/reactnativepayments/ReactNativePaymentsModule.class
+new file mode 100644
+index 0000000..5f97e3e
+Binary files /dev/null and b/node_modules/react-native-payments/android/bin/src/main/java/com/reactnativepayments/ReactNativePaymentsModule.class differ
+diff --git a/node_modules/react-native-payments/android/bin/src/main/java/com/reactnativepayments/ReactNativePaymentsPackage.class b/node_modules/react-native-payments/android/bin/src/main/java/com/reactnativepayments/ReactNativePaymentsPackage.class
+new file mode 100644
+index 0000000..383bd9b
+Binary files /dev/null and b/node_modules/react-native-payments/android/bin/src/main/java/com/reactnativepayments/ReactNativePaymentsPackage.class differ
+diff --git a/node_modules/react-native-payments/js/PaymentRequest/index.js b/node_modules/react-native-payments/js/PaymentRequest/index.js
+index cd05a4c..4331911 100644
+--- a/node_modules/react-native-payments/js/PaymentRequest/index.js
++++ b/node_modules/react-native-payments/js/PaymentRequest/index.js
+@@ -409,16 +409,19 @@ export default class PaymentRequest {
+ 
+   _removeEventListeners() {
+     // Internal Events
+-    DeviceEventEmitter.removeSubscription(this._userDismissSubscription);
+-    DeviceEventEmitter.removeSubscription(this._userAcceptSubscription);
+-
++    // DeviceEventEmitter.removeSubscription(this._userDismissSubscription);
++    // DeviceEventEmitter.removeSubscription(this._userAcceptSubscription);
++    this._userDismissSubscription.remove()
++    this._userAcceptSubscription.remove()
+     if (IS_IOS) {
+-      DeviceEventEmitter.removeSubscription(
+-        this._shippingAddressChangeSubscription
+-      );
+-      DeviceEventEmitter.removeSubscription(
+-        this._shippingOptionChangeSubscription
+-      );
++      // DeviceEventEmitter.removeSubscription(
++      //   this._shippingAddressChangeSubscription
++      // );
++      // DeviceEventEmitter.removeSubscription(
++      //   this._shippingOptionChangeSubscription
++      // );
++      this._shippingAddressChangeSubscription.remove()
++      this._shippingOptionChangeSubscription.remove()
+     }
+   }
+ 

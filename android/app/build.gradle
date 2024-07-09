@@ -1,0 +1,236 @@
+apply plugin: "com.android.application"
+
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
+
+apply plugin: "com.facebook.react"
+apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+
+
+/**
+* This is the configuration block to customize your React Native Android app.
+ * By default you don't need to apply any configuration, just uncomment the lines you need.
+ */
+react {
+    /* Folders */
+    //   The root of your project, i.e. where "package.json" lives. Default is '..'
+    // root = file("../")
+    //   The folder where the react-native NPM package is. Default is ../node_modules/react-native
+    // reactNativeDir = file("../node_modules/react-native")
+    //   The folder where the react-native Codegen package is. Default is ../node_modules/@react-native/codegen
+    // codegenDir = file("../node_modules/@react-native/codegen")
+    //   The cli.js file which is the React Native CLI entrypoint. Default is ../node_modules/react-native/cli.js
+    // cliFile = file("../node_modules/react-native/cli.js")
+    /* Variants */
+    //   The list of variants to that are debuggable. For those we're going to
+    //   skip the bundling of the JS bundle and the assets. By default is just 'debug'.
+    //   If you add flavors like lite, prod, etc. you'll have to list your debuggableVariants.
+    // debuggableVariants = ["liteDebug", "prodDebug"]
+    /* Bundling */
+    //   A list containing the node command and its flags. Default is just 'node'.
+    // nodeExecutableAndArgs = ["node"]
+    //
+    //   The command to run when bundling. By default is 'bundle'
+    // bundleCommand = "ram-bundle"
+    //
+    //   The path to the CLI configuration file. Default is empty.
+    // bundleConfig = file(../rn-cli.config.js)
+    //
+    //   The name of the generated asset file containing your JS bundle
+    // bundleAssetName = "MyApplication.android.bundle"
+    //
+    //   The entry file for bundle generation. Default is 'index.android.js' or 'index.js'
+    // entryFile = file("../js/MyApplication.android.js")
+    //
+    //   A list of extra flags to pass to the 'bundle' commands.
+    //   See https://github.com/react-native-community/cli/blob/main/docs/commands.md#bundle
+    // extraPackagerArgs = []
+    /* Hermes Commands */
+    //   The hermes compiler command to run. By default it is 'hermesc'
+    // hermesCommand = "$rootDir/my-custom-hermesc/bin/hermesc"
+    //
+    //   The list of flags to pass to the Hermes compiler. By default is "-O", "-output-source-map"
+    // hermesFlags = ["-O", "-output-source-map"]
+}
+
+/**
+ * Set this to true to Run Proguard on Release builds to minify the Java bytecode.
+ */
+def enableProguardInReleaseBuilds = true
+
+/**
+  * The preferred build flavor of JavaScriptCore (JSC)
+ *
+ * For example, to use the international variant, you can use:
+ * `def jscFlavor = 'org.webkit:android-jsc-intl:+'`
+ *
+ * The international variant includes ICU i18n library and necessary data
+ * allowing to use e.g. `Date.toLocaleString` and `String.localeCompare` that
+ * give correct results when using with locales other than en-US. Note that
+* this variant is about 6MiB larger per architecture than default.
+ */
+def jscFlavor = 'org.webkit:android-jsc:+'
+
+android {
+
+
+    ndkVersion rootProject.ext.ndkVersion
+
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
+    namespace ""
+    packagingOptions {
+        def taskName = getGradle().getStartParameter().getTaskRequests().toString()
+        exclude 'google/protobuf/*'
+        if (taskName.contains("Debug")) {
+            exclude '**/libhermes-executor-release.so'
+        } else {
+            exclude '**/libhermes-executor-debug.so'
+            exclude '**/libhermes-executor-common-debug.so'
+        }
+        jniLibs {
+        useLegacyPackaging = false
+       }
+     
+     pickFirst 'lib/x86/libc++_shared.so'
+       pickFirst 'lib/x86_64/libjsc.so'
+       pickFirst 'lib/arm64-v8a/libjsc.so'
+       pickFirst 'lib/arm64-v8a/libc++_shared.so'
+       pickFirst 'lib/x86_64/libc++_shared.so'
+       pickFirst 'lib/armeabi-v7a/libc++_shared.so'
+     
+    }
+    defaultConfig {
+        applicationId ""
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 302701
+        versionName '10.18.0'
+        multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
+    //    manifestPlaceholders = [ctAccount:"TEST-48Z-54W-675Z", ctToken: "TEST-045-1b4"]
+        // manifestPlaceholders = [ctAccount:"4W5-Z66-475Z", ctToken: "661-504"]
+        resValue 'string', "CODE_PUSH_APK_BUILD_TIME", String.format("\"%d\"", System.currentTimeMillis())
+        ndk.abiFilters 'armeabi-v7a','arm64-v8a','x86','x86_64'
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            
+        }
+        release {
+            if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
+                storeFile file(MYAPP_RELEASE_STORE_FILE)
+                storePassword MYAPP_RELEASE_STORE_PASSWORD
+                keyAlias MYAPP_RELEASE_KEY_ALIAS
+                keyPassword MYAPP_RELEASE_KEY_PASSWORD
+                //v3signing
+                v2SigningEnabled true
+                enableV3Signing true
+
+            }
+        }
+    }
+    buildFeatures {
+        viewBinding true
+    }
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+            // Note: CodePush updates should not be tested in Debug mode as they are overriden by the RN packager. However, because CodePush checks for updates in all modes, we must supply a key.
+            resValue "string", "CodePushDeploymentKey", '""'
+            buildConfigField("String","CT_ID", CT_ID)
+            buildConfigField("String","CT_TOKEN", CT_TOKEN)
+        }
+        releaseStaging {
+            resValue "string", "CodePushDeploymentKey", '""'
+            buildConfigField("String","CT_ID", CT_ID)
+            buildConfigField("String","CT_TOKEN", CT_TOKEN)
+
+            // Note: It is a good idea to provide matchingFallbacks for the new buildType you create to prevent build issues
+            // Add the following line if not already there
+            matchingFallbacks = ['release']
+        }
+        release {
+            // Caution! In production, you need to generate your own keystore file.
+            // see https://reactnative.dev/docs/signed-apk-android.
+            // Disables PNG crunching for the release build type.
+            crunchPngs false
+            debuggable false
+            zipAlignEnabled enableProguardInReleaseBuilds
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            resValue "string", "CodePushDeploymentKey", '""'
+            buildConfigField("String","CT_ID", CT_ID)
+            buildConfigField("String","CT_TOKEN", CT_TOKEN)
+            ndk {
+                abiFilters "arm64-v8a", "armeabi-v7a"
+            }
+        }
+    }
+
+}
+repositories {
+        configurations.all {
+    resolutionStrategy {
+        force "com.facebook.fresco:fresco:2.5.0"
+    }
+}
+maven {
+            url "https://s3-us-west-2.amazonaws.com/si-mobile-sdks/android/"
+            url "https://maven.google.com"
+        }
+}
+dependencies {
+    implementation "com.facebook.react:react-android"  // From node_modules
+
+   debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
+    debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
+        exclude group:'com.squareup.okhttp3', module:'okhttp'
+    }
+
+    debugImplementation("com.facebook.flipper:flipper-fresco-plugin:${FLIPPER_VERSION}")
+    if (hermesEnabled.toBoolean()) {
+        implementation("com.facebook.react:hermes-android")
+    } else {
+        implementation jscFlavor
+    }
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+    implementation 'com.google.android.gms:play-services-base:18.0.2'
+    implementation 'com.google.android.gms:play-services-auth-api-phone:17.5.0'
+    implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
+   // implementation 'com.clevertap.android:clevertap-geofence-sdk:1.1.0'
+    //implementation 'com.google.android.gms:play-services-location:18.0.0'
+    implementation 'com.google.guava:guava:29.0-android'
+    implementation "com.clevertap.android:push-templates:1.0.8"
+    implementation 'com.clevertap.android:clevertap-android-sdk:5.1.0'
+    implementation 'com.android.installreferrer:installreferrer:2.2'
+    implementation 'com.github.mwiede:jsch:0.1.62'
+    implementation 'com.google.android.gms:play-services-wallet:19.1.0'
+    implementation 'com.google.firebase:firebase-messaging:22.0.0'
+    implementation 'com.facebook.fresco:animated-gif:2.5.0'
+    implementation "androidx.work:work-runtime-ktx:2.7.0"
+   // implementation 'androidx.concurrent:concurrent-futures:1.1.0'
+    implementation("com.squareup.okhttp3:okhttp:4.9.1")
+    implementation("com.squareup.okhttp3:okhttp-urlconnection:4.9.1")
+    implementation project(':react-native-qualtrics')
+    implementation files("../../node_modules/zdefend/android/libs/zdefend.aar")
+    implementation files('libs/adjust-libs.aar')
+    implementation 'com.android.support:multidex:2.0.1'
+    implementation ("androidx.appcompat:appcompat:1.3.1") {
+        version {
+            strictly '1.3.1'
+        }
+    }
+
+}
+
+apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+apply plugin: 'com.google.firebase.firebase-perf'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'

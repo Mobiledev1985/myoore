@@ -1,0 +1,204 @@
+diff --git a/node_modules/@tap-payments/google-pay-rn/android/.project b/node_modules/@tap-payments/google-pay-rn/android/.project
+new file mode 100644
+index 0000000..a0324a9
+--- /dev/null
++++ b/node_modules/@tap-payments/google-pay-rn/android/.project
+@@ -0,0 +1,34 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<projectDescription>
++	<name>tap-payments_google-pay-rn</name>
++	<comment>Project tap-payments_google-pay-rn created by Buildship.</comment>
++	<projects>
++	</projects>
++	<buildSpec>
++		<buildCommand>
++			<name>org.eclipse.jdt.core.javabuilder</name>
++			<arguments>
++			</arguments>
++		</buildCommand>
++		<buildCommand>
++			<name>org.eclipse.buildship.core.gradleprojectbuilder</name>
++			<arguments>
++			</arguments>
++		</buildCommand>
++	</buildSpec>
++	<natures>
++		<nature>org.eclipse.jdt.core.javanature</nature>
++		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
++	</natures>
++	<filteredResources>
++		<filter>
++			<id>1712140299830</id>
++			<name></name>
++			<type>30</type>
++			<matcher>
++				<id>org.eclipse.core.resources.regexFilterMatcher</id>
++				<arguments>node_modules|\.git|__CREATED_BY_JAVA_LANGUAGE_SERVER__</arguments>
++			</matcher>
++		</filter>
++	</filteredResources>
++</projectDescription>
+diff --git a/node_modules/@tap-payments/google-pay-rn/android/bin/build.gradle b/node_modules/@tap-payments/google-pay-rn/android/bin/build.gradle
+new file mode 100644
+index 0000000..1733a34
+--- /dev/null
++++ b/node_modules/@tap-payments/google-pay-rn/android/bin/build.gradle
+@@ -0,0 +1,76 @@
++buildscript {
++  repositories {
++    google()
++    mavenCentral()
++  }
++
++  dependencies {
++    classpath "com.android.tools.build:gradle:7.2.1"
++  }
++}
++
++def isNewArchitectureEnabled() {
++  return rootProject.hasProperty("newArchEnabled") && rootProject.getProperty("newArchEnabled") == "true"
++}
++
++apply plugin: "com.android.library"
++
++if (isNewArchitectureEnabled()) {
++  apply plugin: "com.facebook.react"
++}
++
++def getExtOrDefault(name) {
++  return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties["TapGooglePayRn_" + name]
++}
++
++def getExtOrIntegerDefault(name) {
++  return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["TapGooglePayRn_" + name]).toInteger()
++}
++
++android {
++  compileSdkVersion getExtOrIntegerDefault("compileSdkVersion")
++
++  defaultConfig {
++    minSdkVersion getExtOrIntegerDefault("minSdkVersion")
++    targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
++    buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
++  }
++  buildTypes {
++    release {
++      minifyEnabled false
++    }
++  }
++
++  lintOptions {
++    disable "GradleCompatible"
++  }
++
++  compileOptions {
++    sourceCompatibility JavaVersion.VERSION_1_8
++    targetCompatibility JavaVersion.VERSION_1_8
++  }
++
++}
++
++repositories {
++  mavenCentral()
++  google()
++}
++
++
++dependencies {
++  // For < 0.71, this will be from the local maven repo
++  // For > 0.71, this will be replaced by `com.facebook.react:react-android:$version` by react gradle plugin
++  //noinspection GradleDynamicVersion
++  implementation "com.facebook.react:react-native"
++  implementation 'com.github.Tap-Payments:TapGooglePayKit:0.0.35'
++  implementation "com.google.android.gms:play-services-wallet:18.1.3"
++}
++
++if (isNewArchitectureEnabled()) {
++  react {
++    jsRootDir = file("../src/")
++    libraryName = "TapGooglePayRn"
++    codegenJavaPackageName = "com.tapgooglepayrn"
++  }
++}
+diff --git a/node_modules/@tap-payments/google-pay-rn/android/bin/gradle.properties b/node_modules/@tap-payments/google-pay-rn/android/bin/gradle.properties
+new file mode 100644
+index 0000000..bc7466e
+--- /dev/null
++++ b/node_modules/@tap-payments/google-pay-rn/android/bin/gradle.properties
+@@ -0,0 +1,5 @@
++TapGooglePayRn_kotlinVersion=1.7.0
++TapGooglePayRn_minSdkVersion=21
++TapGooglePayRn_targetSdkVersion=31
++TapGooglePayRn_compileSdkVersion=31
++TapGooglePayRn_ndkversion=21.4.7075529
+diff --git a/node_modules/@tap-payments/google-pay-rn/android/bin/src/main/AndroidManifest.xml b/node_modules/@tap-payments/google-pay-rn/android/bin/src/main/AndroidManifest.xml
+new file mode 100644
+index 0000000..b74441d
+--- /dev/null
++++ b/node_modules/@tap-payments/google-pay-rn/android/bin/src/main/AndroidManifest.xml
+@@ -0,0 +1,8 @@
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++          package="com.tapgooglepayrn">
++  <application>
++    <meta-data
++      android:name="com.google.android.gsm.wallet.api.enabled"
++      android:value="true" />
++  </application>
++</manifest>
+diff --git a/node_modules/@tap-payments/google-pay-rn/android/bin/src/main/java/com/tapgooglepayrn/GoogleButtonViewManager.class b/node_modules/@tap-payments/google-pay-rn/android/bin/src/main/java/com/tapgooglepayrn/GoogleButtonViewManager.class
+new file mode 100644
+index 0000000..d18ad24
+Binary files /dev/null and b/node_modules/@tap-payments/google-pay-rn/android/bin/src/main/java/com/tapgooglepayrn/GoogleButtonViewManager.class differ
+diff --git a/node_modules/@tap-payments/google-pay-rn/android/bin/src/main/java/com/tapgooglepayrn/SDKCallBack.class b/node_modules/@tap-payments/google-pay-rn/android/bin/src/main/java/com/tapgooglepayrn/SDKCallBack.class
+new file mode 100644
+index 0000000..776e35d
+Binary files /dev/null and b/node_modules/@tap-payments/google-pay-rn/android/bin/src/main/java/com/tapgooglepayrn/SDKCallBack.class differ
+diff --git a/node_modules/@tap-payments/google-pay-rn/android/bin/src/main/java/com/tapgooglepayrn/TapGooglePayRnModule.class b/node_modules/@tap-payments/google-pay-rn/android/bin/src/main/java/com/tapgooglepayrn/TapGooglePayRnModule.class
+new file mode 100644
+index 0000000..21691d9
+Binary files /dev/null and b/node_modules/@tap-payments/google-pay-rn/android/bin/src/main/java/com/tapgooglepayrn/TapGooglePayRnModule.class differ
+diff --git a/node_modules/@tap-payments/google-pay-rn/android/bin/src/main/java/com/tapgooglepayrn/TapGooglePayRnPackage.class b/node_modules/@tap-payments/google-pay-rn/android/bin/src/main/java/com/tapgooglepayrn/TapGooglePayRnPackage.class
+new file mode 100644
+index 0000000..9ff7a56
+Binary files /dev/null and b/node_modules/@tap-payments/google-pay-rn/android/bin/src/main/java/com/tapgooglepayrn/TapGooglePayRnPackage.class differ
+diff --git a/node_modules/@tap-payments/google-pay-rn/android/bin/src/main/java/com/tapgooglepayrn/TapGoogleSDKDelegate.class b/node_modules/@tap-payments/google-pay-rn/android/bin/src/main/java/com/tapgooglepayrn/TapGoogleSDKDelegate.class
+new file mode 100644
+index 0000000..e388065
+Binary files /dev/null and b/node_modules/@tap-payments/google-pay-rn/android/bin/src/main/java/com/tapgooglepayrn/TapGoogleSDKDelegate.class differ
+diff --git a/node_modules/@tap-payments/google-pay-rn/android/bin/src/main/res/layout/layout.xml b/node_modules/@tap-payments/google-pay-rn/android/bin/src/main/res/layout/layout.xml
+new file mode 100644
+index 0000000..3b52ff0
+--- /dev/null
++++ b/node_modules/@tap-payments/google-pay-rn/android/bin/src/main/res/layout/layout.xml
+@@ -0,0 +1,18 @@
++<?xml version="1.0" encoding="utf-8"?>
++<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
++  android:clickable="true"
++  android:focusable="true"
++  android:layout_width="match_parent"
++  android:layout_height="48sp"
++  android:padding="2sp">
++
++
++  <company.tap.google.pay.open.GooglePayButton
++    android:id="@+id/googlePayView"
++    android:layout_width="match_parent"
++    android:layout_height="wrap_content"
++    android:layout_alignParentBottom="true"
++    android:enabled="true"
++    android:focusable="true"
++    />
++</RelativeLayout>
+diff --git a/node_modules/@tap-payments/google-pay-rn/android/build.gradle b/node_modules/@tap-payments/google-pay-rn/android/build.gradle
+index 1733a34..958c2bf 100644
+--- a/node_modules/@tap-payments/google-pay-rn/android/build.gradle
++++ b/node_modules/@tap-payments/google-pay-rn/android/build.gradle
+@@ -62,7 +62,7 @@ dependencies {
+   // For < 0.71, this will be from the local maven repo
+   // For > 0.71, this will be replaced by `com.facebook.react:react-android:$version` by react gradle plugin
+   //noinspection GradleDynamicVersion
+-  implementation "com.facebook.react:react-native"
++  implementation "com.facebook.react:react-native:+"
+   implementation 'com.github.Tap-Payments:TapGooglePayKit:0.0.35'
+   implementation "com.google.android.gms:play-services-wallet:18.1.3"
+ }

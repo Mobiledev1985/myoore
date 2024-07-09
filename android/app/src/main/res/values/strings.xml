@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name"></string>
+    <string name="facebook_app_id"></string>
+    <string name="appwidget_text"></string>
+    <string name="add_widget"></string>
+    <string name="app_widget_description"></string>
+</resources>
